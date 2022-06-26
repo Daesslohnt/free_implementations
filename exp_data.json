@@ -1,0 +1,28 @@
+[
+  {
+    "title": "Moby Dik",
+    "author": "Arthur",
+    "publisher": "ChristmasOAO",
+    "price": 10.6,
+    "subtitle": "for example"
+  },
+  {
+    "title": "Der Morgen einer neuer Zeit",
+    "author": "Kenn Follet",
+    "publisher": "Luebbe",
+    "price": 19.99,
+    "subtitle": "Historischer Roman"
+  },
+  {
+    "title": "Tom Sozer",
+    "author": "Mark Twen",
+    "publisher": "American Express",
+    "price": 5.20
+  },
+  {
+    "title": "Faust",
+    "author": "Goethe",
+    "publisher": "Dresden",
+    "price": 6.3
+  }
+]
