@@ -6,26 +6,18 @@ class Employee:
         self.last_name = last_name
 
     @property
-    def email(self):
+    def _email(self):
         return f'{self.first_name}.{self.last_name}@email.com'
 
-    @email.setter
-    def email(self, name):
+    @_email.setter
+    def _email(self, name):
         self.first_name, self.last_name = name.split(' ')
 
-    @email.deleter
-    def email(self):
+    @_email.deleter
+    def e_mail(self):
         print('Delete Email')
         self.last_name, self.first_name = None, None
 
-
-
-employee = Employee('Sigurd', 'Sturlason')
-
-print(employee.email)
-
-employee.email = 'Snorry Svenson'
-
-print(employee.email)
-
-del employee.email
+karl = Employee('Karl', 'Gustav')
+karl._email = "Wilhelm Ogrange"
+print(karl._email)
