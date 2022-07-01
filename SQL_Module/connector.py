@@ -76,17 +76,21 @@ class Connector(metaclass=Singletone):
         :return: tuple of tuples
         """
 
-        try:
-            with self.connection.cursor() as cursor:
-                query = f"SELECT * FROM {table_name}"
-                cursor.execute(query)
-                rows = cursor.fetchall()
-                self.logger.info("Selection is successful")
-                return rows
-        except Exception as ex:
-            self.logger.error(f"Problem with select all query:\n{ex}")
+        query = f"SELECT * FROM {table_name}"
+        return self._custom_select_query(query)
 
-    def custom_select_query(self, query: str) -> tuple:
+    def conditional_all_selection(self, table_name: str, conditions: str) -> tuple:
+        """
+        select all columns with conditions WHERE.
+
+        :param table_name: name of table from where you receive data
+        :param conditions: conditions after WHERE, do not use other key words!
+        """
+        # TODO user can write additional code like drop table after selection!
+        query = f"SELECT * FROM {table_name} WHERE {conditions}"
+        return self._custom_select_query(query)
+
+    def _custom_select_query(self, query: str) -> tuple:
         """
         send a custom selection query to database.
 
@@ -103,15 +107,35 @@ class Connector(metaclass=Singletone):
         except Exception as ex:
             self.logger.error(f"Problem with selection query:\n{ex}")
 
-    def custom_insert_query(self, query: str) -> None:
+    def insert_all_data(self, table_name: str, values: str) -> None:
         """
         send a custom insertion query to database.
 
-        :param query: you need to define the whole MySQL query including table_name
+        :param table_name: name of table you want to insert new data
+        :param values: the data (for all columns)
         """
 
         try:
             with self.connection.cursor() as cursor:
+                query = f"INSERT INTO {table_name} VALUES {values}"
+                cursor.execute(query)
+                self.connection.commit()
+                self.logger.warning("Insertion is successful")
+        except Exception as ex:
+            self.logger.error(f"Problem with insertion query:\n{ex}")
+
+    def insert_data(self, table_name: str, keys: str, values: str) -> None:
+        """
+        send a custom insertion query to database.
+
+        :param table_name: name of table you want to insert new data
+        :param keys: columns where you insert data
+        :param values: the data (for all columns)
+        """
+
+        try:
+            with self.connection.cursor() as cursor:
+                query = f"INSERT INTO {table_name}({keys}) VALUES {values}"
                 cursor.execute(query)
                 self.connection.commit()
                 self.logger.warning("Insertion is successful")
