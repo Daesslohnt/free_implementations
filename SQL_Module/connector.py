@@ -114,7 +114,7 @@ class Connector(metaclass=Singletone):
             with self.connection.cursor() as cursor:
                 cursor.execute(query)
                 self.connection.commit()
-                self.logger.info("Insertion is successful")
+                self.logger.warning("Insertion is successful")
         except Exception as ex:
             self.logger.error(f"Problem with insertion query:\n{ex}")
 
@@ -122,7 +122,7 @@ class Connector(metaclass=Singletone):
         """
         Change values under specific conditions.
 
-        :param table_name:
+        :param table_name: name of table you want ot update
         :param key_val_pairs: column1 = value1, column2 = value2
         :param condition: special conditions on what position values should be changed
         """
@@ -132,9 +132,26 @@ class Connector(metaclass=Singletone):
                 query = f"UPDATE {table_name} SET {key_val_pairs} WHERE {condition}"
                 cursor.execute(query)
                 self.connection.commit()
-                self.logger.info(f"Table {table_name} is successfully updated")
+                self.logger.warning(f"Table {table_name} is successfully updated")
         except Exception as ex:
             self.logger.error(f"Problem with update of table:\n{ex}")
+
+    def delete_rows(self, table_name: str, condition: str) -> None:
+        """
+        delete rows of data from a table.
+
+        :param table_name: name of table where you want to delete some data
+        :param condition: rows to be deleted
+        """
+
+        try:
+            with self.connection.cursor() as cursor:
+                query = f"DELETE FROM {table_name} WHERE {condition}"
+                cursor.execute(query)
+                self.connection.commit()
+                self.logger.warning(f"Rows from table {table_name} are successfully deleted")
+        except Exception as ex:
+            self.logger.error(f"Problem with drop of table:\n{ex}")
 
     def delete_table(self, table_name: str) -> None:
         """
