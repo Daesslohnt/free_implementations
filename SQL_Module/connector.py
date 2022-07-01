@@ -35,7 +35,7 @@ class Connector(metaclass=Singletone):
     def __enter__(self):
         return self
 
-    def __exit__(self):
+    def __exit__(self, *args, **kwargs):
         del self
 
     def connect_to_database(self, database_name: str):
@@ -61,14 +61,14 @@ class Connector(metaclass=Singletone):
 
         try:
             with self.connection.cursor() as cursor:
-                query = f"CREATE TABLE {table_name} ({values});"
+                query = f"CREATE TABLE IF NOT EXISTS {table_name} ({values});"
                 cursor.execute(query)
                 self.connection.commit()
                 self.logger.warning(f"Creation of table {table_name} is successful")
         except Exception as ex:
             self.logger.error(f"Problem with creation of table:\n{ex}")
 
-    def select_all(self, table_name: str):
+    def select_all(self, table_name: str) -> tuple:
         """
         choose all columns from table and receive all rows.
 
@@ -86,7 +86,7 @@ class Connector(metaclass=Singletone):
         except Exception as ex:
             self.logger.error(f"Problem with select all query:\n{ex}")
 
-    def custom_select_query(self, query: str):
+    def custom_select_query(self, query: str) -> tuple:
         """
         send a custom selection query to database.
 
@@ -117,3 +117,37 @@ class Connector(metaclass=Singletone):
                 self.logger.info("Insertion is successful")
         except Exception as ex:
             self.logger.error(f"Problem with insertion query:\n{ex}")
+
+    def update_table(self, table_name: str, key_val_pairs: str, condition: str) -> None:
+        """
+        Change values under specific conditions.
+
+        :param table_name:
+        :param key_val_pairs: column1 = value1, column2 = value2
+        :param condition: special conditions on what position values should be changed
+        """
+
+        try:
+            with self.connection.cursor() as cursor:
+                query = f"UPDATE {table_name} SET {key_val_pairs} WHERE {condition}"
+                cursor.execute(query)
+                self.connection.commit()
+                self.logger.info(f"Table {table_name} is successfully updated")
+        except Exception as ex:
+            self.logger.error(f"Problem with update of table:\n{ex}")
+
+    def delete_table(self, table_name: str) -> None:
+        """
+        drop query for table in database.
+
+        :param table_name: name of table you want to delete
+        """
+
+        try:
+            with self.connection.cursor() as cursor:
+                query = f"DROP TABLE {table_name}"
+                cursor.execute(query)
+                self.connection.commit()
+                self.logger.info(f"Table {table_name} is successfully deleted")
+        except Exception as ex:
+            self.logger.error(f"Problem with drop of table:\n{ex}")
