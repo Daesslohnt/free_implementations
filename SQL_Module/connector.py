@@ -13,11 +13,15 @@ class Singletone(type):
 
 
 class Connector(metaclass=Singletone):
-    config = Reader.read_config()
     logger = logging.getLogger("SQL Logger")
     logger.setLevel(logging.DEBUG)
+    config = None
     
-    def __init__(self, database_name=None):
+    def __init__(self, database_name=None, linux=False):
+        if linux:
+            self.config = Reader.read_config_linux()
+        else:
+            self.config = Reader.read_config_win()
         if database_name is None:
             pass
         else:
