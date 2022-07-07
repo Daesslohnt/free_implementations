@@ -12,7 +12,7 @@ class B(Root):
         print("B.f", self)
         super().f()
 
-class C(A, B): # mro( C, A, B, object)
+class C(A, B): # mro( C, A, B, Root, object)
     def f(self):
         print("C.f", self)
         super().f()
