@@ -17,11 +17,8 @@ class Connector(metaclass=Singletone):
     logger.setLevel(logging.DEBUG)
     config = None
     
-    def __init__(self, database_name=None, linux=False):
-        if linux:
-            self.config = Reader.read_config_linux()
-        else:
-            self.config = Reader.read_config_win()
+    def __init__(self, database_name=None):
+        self.config = Reader.read_config()
         if database_name is None:
             pass
         else:
@@ -193,6 +190,6 @@ class Connector(metaclass=Singletone):
                 query = f"DROP TABLE {table_name}"
                 cursor.execute(query)
                 self.connection.commit()
-                self.logger.info(f"Table {table_name} is successfully deleted")
+                self.logger.warning(f"Table {table_name} is successfully deleted")
         except Exception as ex:
             self.logger.error(f"Problem with drop of table:\n{ex}")
