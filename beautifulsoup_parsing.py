@@ -8,7 +8,7 @@ res = requests.get(url)
 soup = BeautifulSoup(res.text, 'html.parser')
 tags_tr = soup.tbody.find_all("tr")
 
-def add_data(index, td, sub_data):
+def add_data(td, sub_data):
     string = td.text
 
     string = ''.join(string.split())
@@ -26,9 +26,9 @@ for tr in tags_tr:
     sub_data = []
     for index, td in enumerate(tr.find_all("td")):
         if index % 9 != 0 or index == 0:
-            add_data(index, td, sub_data)
+            add_data(td, sub_data)
         else:
-            add_data(index, td, sub_data)
+            add_data(td, sub_data)
             data.append(sub_data)
             sub_data = []
 
@@ -37,10 +37,11 @@ df = pd.DataFrame(data, columns=columns)
 
 for index, year in enumerate(df['Jahr']):
     if year // 3000 > 1:
-        df.iloc[index, 0]= year // 10
+        df.iloc[index, 0] = year // 10
 print(df)
 
 import matplotlib.pyplot as plt
 
 plt.plot(df['Jahr'], df['insgesamt'])
+plt.grid(True)
 plt.show()
