@@ -3,7 +3,7 @@ import json
 
 class Reader:
     SLASH = '/' if platform.system() == 'Linux' else '\\'
-    CONFIG_PATH = "SQL_Module{}config.json".format(SLASH)
+    CONFIG_PATH = "SQL_Module{}src{}config.json".format(SLASH, SLASH)
 
     @staticmethod
     def read_config():
