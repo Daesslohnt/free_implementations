@@ -87,9 +87,12 @@ class QueryManager:
         select all columns with conditions WHERE.
 
         :param table_name: name of table from where you receive data
-        :param condition: conditions after WHERE, do not use other key words!
+        :param condition: conditions after WHERE, do not use other key words!,
+        all operators should be separated by space.
         """
 
+        # if QueryUtils.check_functional_words(condition):
+        #     raise IOError("Unavailable input by using prohibited key words", condition)
         if not QueryUtils.check_table_name(table_name):
             raise IOError("Not allowed name for table", table_name)
         data = self._custom_select_query(self.SELECT_ALL_WHERE.format(table_name, condition))
@@ -105,7 +108,6 @@ class QueryManager:
         :param values: the data in form of (val11, val12, ... ), (val22, val22, ...)
         """
 
-        # here should be checked if count of columns and values equal is
         if not QueryUtils.check_table_name(table_name):
             raise IOError("Not allowed name for table", table_name)
         insert_data_wrapper = self._decorator(self._committable_pattern)
@@ -129,7 +131,8 @@ class QueryManager:
 
         :param table_name: name of table you want ot update
         :param new_col_val_pair: column1 = value1, column2 = value2
-        :param condition: special conditions on what position values should be changed
+        :param condition: special conditions on what position values should be changed,
+        all operators should be separated by space.
         """
 
         update_data_wrapper = self._decorator(self._committable_pattern)
@@ -141,7 +144,7 @@ class QueryManager:
         delete rows of data from a table.
 
         :param table_name: name of table where you want to delete some data
-        :param condition: rows to be deleted
+        :param condition: rows to be deleted, all operators should be separated by space.
         """
 
         delete_data_wrapper = self._decorator(self._committable_pattern)
